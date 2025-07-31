@@ -1,0 +1,8 @@
+#docker commit -a "John" -m "Estado recuperado após falha do Docker com dados verificados tpc-e" stupefied_faraday tpc-e:v1
+# tpc-e
+# docker exec -t stupefied_faraday pg_dump -U postgres -F c -b -v -f /tmp/backup.dump postgres
+
+# docker cp stupefied_faraday:/tmp/backup.dump D:\benchmarks\tpce.dump
+# docker cp D:\benchmarks\tpce.dump tpce-backup:/tmp/tpce.dump
+# docker exec -t tpce-backup pg_restore -U postgres -d postgres -v /tmp/tpce.dump
+docker commit tpce-commit tpc-e-snapshot:base-700mb
