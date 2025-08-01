@@ -29,9 +29,8 @@ DB_CONFIG = {
     "dbname": DB_TEST_NAME
 }
 
-# Configuração de Conexão para tarefas de Administração (reset do banco)
 DB_ADMIN_CONFIG = DB_CONFIG.copy()
-DB_ADMIN_CONFIG["dbname"] = "postgres" # Conecta-se a um banco padrão para poder criar/dropar outros
+DB_ADMIN_CONFIG["dbname"] = "postgres" 
 
 # Filas para comunicação entre threads
 task_queue = queue.Queue()
@@ -242,7 +241,6 @@ def generate_report_and_graphs(results_df, duration):
         print("Nenhum resultado foi coletado para gerar o relatório.")
         return
 
-    # --- Cálculos ---
     total_transactions = len(results_df)
     throughput = total_transactions / duration if duration > 0 else 0
     success_count = len(results_df[results_df['status'] == 'SUCCESS'])
@@ -251,7 +249,6 @@ def generate_report_and_graphs(results_df, duration):
     avg_response_time_ms = (results_df['duration'].sum() / total_transactions * 1000) if total_transactions > 0 else 0
     error_rate_percent = ((abort_count + deadlock_count) / total_transactions * 100) if total_transactions > 0 else 0
 
-    # --- Relatório no Console ---
     print("\n\n" + "="*24 + " RELATÓRIO FINAL (PostgreSQL) " + "="*24)
     print(f"\n[Métricas Gerais]")
     print(f"  - Duração do Teste:       {duration:.2f} segundos")
@@ -281,7 +278,6 @@ def generate_report_and_graphs(results_df, duration):
 
     print("\n" + "="*70)
 
-    # --- Geração de Gráficos ---
     print("\nGerando gráficos...")
     sns.set_theme(style="whitegrid")
 
@@ -330,11 +326,8 @@ if __name__ == "__main__":
         worker.start()
         workers.append(worker)
 
-    # A thread principal atua como um "gerador de carga", enchendo a fila de tarefas.
     while time.monotonic() - test_start_time < TEST_DURATION_SECONDS:
         task_queue.put(random.choice(AVAILABLE_TRANSACTIONS))
-        # Um pequeno sleep para não sobrecarregar a CPU da máquina de teste
-        # com a geração de tarefas, permitindo que os workers trabalhem.
         time.sleep(0.001)
 
     print("\n--- Tempo esgotado. Finalizando workers... ---")
@@ -351,5 +344,4 @@ if __name__ == "__main__":
 
     df = pd.DataFrame(results, columns=['name', 'duration', 'status', 'timestamp'])
     
-    # Chama a função de relatório unificada
     generate_report_and_graphs(df, TEST_DURATION_SECONDS)
