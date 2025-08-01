@@ -1,27 +1,13 @@
-Fase B: Migrar os Dados (Usando CSV como Ponte)
-
 Exportar Cada Tabela do Postgres para um CSV: Para cada tabela, use o comando \copy do psql.
-Generated powershell
-# Exemplo para uma tabela
+
 docker exec postgres-source-tpce psql -U postgres -c "\copy public.e_customer TO '/tmp/e_customer.csv' WITH CSV HEADER"
-# Agora copie o CSV para fora do contêiner
+
 docker cp postgres-source-tpce:/tmp/e_customer.csv D:\benchmarks\csv_data\
-Use code with caution.
-Powershell
-Você precisará fazer isso para todas as tabelas.
-Importar Cada CSV para o SQL Server: Use o comando BULK INSERT do SQL Server. Conecte-se ao seu SQL Server (via Azure Data Studio) e execute:
-Generated sql
+
 BULK INSERT dbo.e_customer
-FROM 'D:\benchmarks\csv_data\e_customer.csv' -- O caminho aqui deve ser acessível pelo SERVIDOR, então é mais fácil rodar isso de dentro do contêiner
+FROM 'D:\benchmarks\csv_data\e_customer.csv'
 WITH (
     FIRSTROW = 2, -- Pula o cabeçalho
     FIELDTERMINATOR = ',',
     ROWTERMINATOR = '\n'
 );
-Use code with caution.
-SQL
-Para fazer isso funcionar com Docker, o jeito mais fácil é copiar os CSVs para dentro do contêiner do SQL Server e especificar o caminho interno.
-docker exec sqlserver-target /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "123" -Q "CREATE DATABASE TPCE_migrado;
-.
-
-Use code with caution.
