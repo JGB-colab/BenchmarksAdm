@@ -12,8 +12,8 @@ import seaborn as sns
 # ==============================================================================
 
 # Parâmetros do Teste
-NUM_WORKERS = 4                # Número de threads/usuários simultâneos
-TEST_DURATION_SECONDS = 120    # Duração do teste em segundos
+NUM_WORKERS = 4              
+TEST_DURATION_SECONDS = 120
 
 # --- CONFIGURAÇÕES DO SQL SERVER ---
 
@@ -231,9 +231,7 @@ def generate_report_and_graphs(results_df, duration):
 # ==============================================================================
 # --- BLOCO DE EXECUÇÃO PRINCIPAL ---
 # ==============================================================================
-# ==============================================================================
-# --- BLOCO DE EXECUÇÃO PRINCIPAL (MODELO HÍBRIDO) ---
-# ==============================================================================
+
 if __name__ == "__main__":
     #reset_test_database()
     
@@ -248,19 +246,16 @@ if __name__ == "__main__":
         worker.start()
         workers.append(worker)
 
-    # --- FASE 1: EXECUÇÃO GARANTIDA DE TODAS AS QUERIES ---
     print("--- Fase 1: Executando cada query pelo menos uma vez... ---")
     guaranteed_tasks = TPCH_QUERIES.copy()
     for task in guaranteed_tasks:
         task_queue.put(task)
     
-    # Espera apenas o lote inicial e obrigatório ser concluído
     task_queue.join()
     
     phase1_duration = time.monotonic() - test_start_time
     print(f"--- Fase 1 concluída em {phase1_duration:.2f} segundos. ---")
 
-    # --- FASE 2: CARGA ALEATÓRIA NO TEMPO RESTANTE ---
     if phase1_duration < TEST_DURATION_SECONDS:
         print(f"--- Fase 2: Iniciando carga aleatória pelo tempo restante... ---")
         query_pool = []
@@ -290,8 +285,6 @@ if __name__ == "__main__":
 
     df = pd.DataFrame(results, columns=['name', 'duration', 'status', 'timestamp'])
     
-    # O relatório final agora considerará todas as queries executadas
-    # A duração do relatório será a duração real total do teste
     final_duration = time.monotonic() - test_start_time
     
     generate_report_and_graphs(df, final_duration)
