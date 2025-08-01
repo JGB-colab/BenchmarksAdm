@@ -13,8 +13,8 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT, ISOLATION_LEVEL_READ
 # ==============================================================================
 
 # Parâmetros do Teste
-NUM_WORKERS = 4                # Número de threads/usuários simultâneos
-TEST_DURATION_SECONDS = 120    # Duração do teste em segundos
+NUM_WORKERS = 4               
+TEST_DURATION_SECONDS = 120  
 
 # --- CONFIGURAÇÕES DO POSTGRESQL ---
 DB_CONFIG = {
@@ -25,10 +25,9 @@ DB_CONFIG = {
 }
 
 # --- CONFIGURAÇÕES DA RESTAURAÇÃO ---
-DB_TEMPLATE_NAME = "tpch_clean"   # O nome do seu banco de dados modelo (previamente configurado)
-DB_TEST_NAME = "postgres"        # O nome do banco de dados temporário que será criado e destruído
+DB_TEMPLATE_NAME = "tpch_clean" 
+DB_TEST_NAME = "postgres"
 
-# Configuração para tarefas de Administração (reset do banco)
 DB_ADMIN_CONFIG = {**DB_CONFIG, "dbname": "postgres"}
 
 # Filas para comunicação entre threads
@@ -67,7 +66,7 @@ TPCH_QUERIES = [
 ]
 
 # ==============================================================================
-# --- ROTINA DE RESET DO BANCO DE DADOS ---
+# --- RESET DO BANCO DE DADOS ---
 # ==============================================================================
 def reset_test_database():
     print("="*60)
