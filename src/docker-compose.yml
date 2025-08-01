@@ -1,4 +1,4 @@
-#docker commit -a "John" -m "Estado recuperado após falha do Docker com dados verificados tpc-e" stupefied_faraday tpc-e:v1
+#docker commit -a "John" -m "Estado recuperado após falha do Docker tpc-e" stupefied_faraday tpc-e:v1
 # tpc-e
 # docker exec -t stupefied_faraday pg_dump -U postgres -F c -b -v -f /tmp/backup.dump postgres
 
